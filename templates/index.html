@@ -1,0 +1,885 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NEXORA | House Price Prediction</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --brown: #493326;
+            --deep-brown: #302016;
+            --caramel: #b17b4d;
+            --gold: #d9ad7b;
+            --cream: #f8f1e7;
+            --white: #fffdf9;
+            --muted: #8b7869;
+        }
+
+        /* BACKGROUND */
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--brown);
+            min-height: 100vh;
+
+            background-image:
+                linear-gradient(
+                    rgba(48, 29, 19, 0.38),
+                    rgba(48, 29, 19, 0.52)
+                ),
+                url("/static/house-bg.jpg");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+
+            overflow-x: hidden;
+        }
+
+        /* NAVIGATION */
+
+        .page {
+            max-width: 1400px;
+            margin: auto;
+            padding: 28px 35px 45px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: white;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: 3px;
+        }
+
+        .brand-symbol {
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f0d0a8, #bd8756);
+            display: grid;
+            place-items: center;
+            color: #382418;
+            font-size: 25px;
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 12px;
+            letter-spacing: 1px;
+            padding: 11px 18px;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 30px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            background: #70d99c;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #70d99c;
+        }
+
+        /* HERO SECTION */
+
+        .hero {
+            text-align: center;
+            padding: 65px 10px 50px;
+        }
+
+        .eyebrow {
+            color: #f2d2ad;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(40px, 6vw, 72px);
+            line-height: 1.15;
+            font-weight: 600;
+        }
+
+        .hero h1 span {
+            color: #e8b982;
+        }
+
+        .hero p {
+            color: #f2e6d9;
+            font-size: 16px;
+            margin-top: 18px;
+            line-height: 1.8;
+        }
+
+        /* MAIN GRID */
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 340px;
+            gap: 25px;
+            align-items: stretch;
+        }
+
+        /* GLASS CARDS */
+
+    .form-card,
+    .side-card {
+    background: rgba(255, 249, 240, 0.25);
+
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 22px;
+
+    box-shadow: 0 20px 60px rgba(36,22,12,0.15);
+    color: white;
+    }
+
+        .form-card {
+            padding: 32px;
+        }
+
+        /* SECTION HEADINGS */
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 27px;
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f0d6b6, #d6ae85);
+            display: grid;
+            place-items: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .section-heading h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--brown);
+        }
+
+        .section-heading p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* FORM */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 23px 22px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        label {
+            color: var(--brown);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 52px;
+            padding: 0 15px;
+            border: 1px solid #dfcbb8;
+            border-radius: 11px;
+            background: rgba(255,255,255,0.83);
+            color: var(--brown);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        input::placeholder {
+            color: #a79789;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: white;
+            color: var(--brown);
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--caramel);
+            box-shadow: 0 0 0 4px rgba(177,123,77,0.14);
+            background: white;
+        }
+
+        /* DIVIDER */
+
+        .divider {
+            border: none;
+            height: 1px;
+            background: rgba(105,73,49,0.17);
+            margin: 35px 0;
+        }
+
+        /* BUTTON */
+
+        .submit-btn {
+            width: 100%;
+            height: 58px;
+            margin-top: 35px;
+            border: none;
+            border-radius: 13px;
+
+            background: linear-gradient(
+                110deg,
+                #69452e,
+                #b98554,
+                #d0a477
+            );
+
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(105,69,46,0.2);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(105,69,46,0.3);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.99);
+        }
+
+        /* SIDE PANEL */
+
+        .side-card {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-label {
+            color: var(--caramel);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2.5px;
+        }
+
+        .side-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 29px;
+            line-height: 1.35;
+            margin-top: 17px;
+            color: var(--brown);
+        }
+
+        .side-card h2 span {
+            color: var(--caramel);
+        }
+
+        .side-description {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.9;
+            margin-top: 12px;
+        }
+
+        /* FEATURE IMAGE */
+
+        .showcase {
+            height: 215px;
+            margin: 25px 0;
+            border-radius: 17px;
+            overflow: hidden;
+            position: relative;
+
+            background:
+                linear-gradient(
+                    rgba(53,32,20,0.08),
+                    rgba(53,32,20,0.22)
+                ),
+                url("/static/house-bg.jpg");
+
+            background-size: cover;
+            background-position: center;
+            border: 1px solid rgba(105,73,49,0.2);
+        }
+
+        .showcase-tag {
+            position: absolute;
+            bottom: 13px;
+            left: 13px;
+            background: rgba(255,248,239,0.9);
+            color: var(--brown);
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* FEATURES */
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 15px 0;
+            border-top: 1px solid rgba(105,73,49,0.14);
+            color: var(--brown);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .feature-icon {
+            width: 37px;
+            height: 37px;
+            display: grid;
+            place-items: center;
+            background: #efdfcc;
+            color: #895b36;
+            border-radius: 11px;
+            font-size: 17px;
+        }
+
+        /* RESULT */
+
+        .result {
+            margin-top: 25px;
+            padding: 28px;
+            border: 1px solid #d6b48f;
+            border-radius: 17px;
+            background: rgba(239,222,202,0.9);
+            animation: appear 0.5s ease;
+        }
+
+        .result h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--brown);
+        }
+
+        .result p {
+            font-family: 'DM Sans', sans-serif;
+            font-size: clamp(28px, 5vw, 42px);
+            font-weight: 800;
+            color: #98643a;
+            margin-top: 15px;
+            overflow-wrap: anywhere;
+        }
+
+        .result small {
+            display: block;
+            color: var(--muted);
+            margin-top: 9px;
+        }
+
+        /* ERROR */
+
+        .error {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 11px;
+            background: #fbe7e3;
+            border: 1px solid #e6b9af;
+            color: #a43f34;
+            font-size: 13px;
+        }
+
+        /* ANIMATION */
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding-top: 35px;
+            color: white;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        footer span {
+            color: #f0c99f;
+            font-weight: 700;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 900px) {
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .side-card {
+                display: none;
+            }
+        }
+
+        @media(max-width: 550px) {
+
+            .page {
+                padding: 18px 13px 35px;
+            }
+
+            .form-card {
+                padding: 23px 17px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 45px 5px 32px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .brand {
+                font-size: 18px;
+            }
+
+            .nav-status {
+                font-size: 9px;
+                padding: 9px 11px;
+            }
+        }
+        /* Make panel text white */
+    .form-card h1,
+    .form-card h2,
+    .form-card h3,
+    .form-card p,
+    .form-card label,
+    .side-card h1,
+    .side-card h2,
+    .side-card h3,
+    .side-card p,
+    .side-card span {
+        color: #ffffff !important;
+    }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- NAVBAR -->
+
+    <nav>
+
+        <div class="brand">
+            <div class="brand-symbol">⌂</div>
+            NEXORA
+        </div>
+
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            AI ENGINE ONLINE
+        </div>
+
+    </nav>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="eyebrow">
+            ✦ &nbsp; SMARTER HOMES. BRIGHTER FUTURE.
+        </div>
+
+        <h1>
+            House Price <span>Prediction</span>
+        </h1>
+
+        <p>
+            Leverage the power of Machine Learning to estimate
+            your property's value with intelligent insights.
+        </p>
+
+    </section>
+
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main-grid">
+
+
+        <!-- LEFT: FORM -->
+
+        <main class="form-card">
+
+            <form action="/predict" method="POST">
+
+
+                <!-- PROPERTY DETAILS -->
+
+                <div class="section-heading">
+
+                    <div class="section-icon">⌂</div>
+
+                    <div>
+                        <h2>Property Details</h2>
+                        <p>Enter the specifications of your property</p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label>Area (sq. ft.)</label>
+                        <input
+                            type="number"
+                            name="area"
+                            min="1"
+                            placeholder="e.g. 3500"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Bedrooms</label>
+                        <input
+                            type="number"
+                            name="bedrooms"
+                            min="1"
+                            placeholder="e.g. 3"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Bathrooms</label>
+                        <input
+                            type="number"
+                            name="bathrooms"
+                            min="1"
+                            placeholder="e.g. 2"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Stories</label>
+                        <input
+                            type="number"
+                            name="stories"
+                            min="1"
+                            placeholder="e.g. 2"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Parking Spaces</label>
+                        <input
+                            type="number"
+                            name="parking"
+                            min="0"
+                            placeholder="e.g. 1"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Furnishing Status</label>
+                        <select name="furnishingstatus" required>
+                            <option value="furnished">Furnished</option>
+                            <option value="semi-furnished">Semi-Furnished</option>
+                            <option value="unfurnished">Unfurnished</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <hr class="divider">
+
+
+                <!-- PROPERTY FEATURES -->
+
+                <div class="section-heading">
+
+                    <div class="section-icon">✧</div>
+
+                    <div>
+                        <h2>Property Features</h2>
+                        <p>Additional property characteristics</p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label>Main Road Access</label>
+                        <select name="mainroad">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Guest Room</label>
+                        <select name="guestroom">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Basement</label>
+                        <select name="basement">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Hot Water Heating</label>
+                        <select name="hotwaterheating">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Air Conditioning</label>
+                        <select name="airconditioning">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Preferred Area</label>
+                        <select name="prefarea">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <button type="submit" class="submit-btn">
+                    ✦ &nbsp; Predict House Price &nbsp; →
+                </button>
+
+
+            </form>
+
+
+            <!-- PREDICTION RESULT -->
+
+            {% if prediction is not none %}
+
+            <div class="result">
+
+                <h2>✦ Your Property Valuation</h2>
+
+                <p>
+                    {{ "{:,.2f}".format(prediction) }}
+                </p>
+
+                <small>
+                    Estimated value · Dataset price units
+                </small>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- ERROR -->
+
+            {% if error %}
+
+            <div class="error">
+                ⚠ &nbsp; {{ error }}
+            </div>
+
+            {% endif %}
+
+
+        </main>
+
+
+        <!-- RIGHT: SHOWCASE -->
+
+        <aside class="side-card">
+
+            <div class="side-label">
+                THE ART OF INTELLIGENT LIVING
+            </div>
+
+            <h2>
+                Discover the <span>true value</span> of your home.
+            </h2>
+
+            <p class="side-description">
+                Every property tells a story. Let machine learning
+                help uncover its estimated market value through
+                data-driven intelligence.
+            </p>
+
+
+            <div class="showcase">
+
+                <div class="showcase-tag">
+                    PREMIUM PROPERTY INSIGHTS
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">✧</div>
+
+                <div>
+                    Machine Learning Powered
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">◈</div>
+
+                <div>
+                    Data-Driven Predictions
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">⚡</div>
+
+                <div>
+                    Instant Property Valuation
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">✓</div>
+
+                <div>
+                    Intelligent Estimation
+                </div>
+
+            </div>
+
+        </aside>
+
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        POWERED BY <span>FASTAPI</span>
+        &nbsp; • &nbsp;
+        MACHINE LEARNING
+
+        <br><br>
+
+        © 2026 NEXORA · PROPERTY INTELLIGENCE
+
+    </footer>
+
+</div>
+
+</body>
+</html>
